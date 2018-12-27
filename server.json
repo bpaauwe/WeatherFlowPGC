@@ -1,5 +1,5 @@
 {
-    "name": "WeatherFlowPoly",
+    "name": "WeatherFlowPGC",
     "docs": "http;//www.bobsplace.com/release/WFNodeserver",
     "type": "python3",
     "executable": "weatherflow.py",

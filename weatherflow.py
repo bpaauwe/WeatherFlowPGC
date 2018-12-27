@@ -44,6 +44,7 @@ class Controller(polyinterface.Controller):
         self.station = ''
         self.agl = 0.0
         self.elevation = 0.0
+        self.http = None 
 
     def process_config(self, config):
         # This isn't really what the name implies, it is getting called
@@ -73,10 +74,10 @@ class Controller(polyinterface.Controller):
         path_str += '?api_key=6c8c96f9-e561-43dd-b173-5198d8797e0a'
 
         try:
-            http = urllib3.HTTPConnectionPool('swd.weatherflow.com', maxsize=1)
+            #http = urllib3.HTTPConnectionPool('swd.weatherflow.com', maxsize=1)
 
             # Get station meta data. We really want AIR height above ground
-            c = http.request('GET', path_str)
+            c = self.http.request('GET', path_str)
             awdata = json.loads(c.data.decode('utf-8'))
             for device in awdata['stations'][0]['devices']:
                 if device['device_type'] == 'AR':
@@ -87,7 +88,7 @@ class Controller(polyinterface.Controller):
             path_str = '/swd/rest/observations/station/'
             path_str += self.station
             path_str += '?api_key=6c8c96f9-e561-43dd-b173-5198d8797e0a'
-            c = http.request('GET', path_str)
+            c = self.http.request('GET', path_str)
 
             awdata = json.loads(c.data.decode('utf-8'))
 
@@ -120,13 +121,13 @@ class Controller(polyinterface.Controller):
                     awdata['obs'][0]['precip_accum_local_yesterday'])
             c.close()
 
-            http.close()
         except Exception as e:
             LOGGER.error('Bad: %s' % str(e))
 
 
     def start(self):
         LOGGER.info('Starting WeatherFlow Node Server')
+        self.http = urllib3.HTTPConnectionPool('swd.weatherflow.com', maxsize=1)
         self.check_params()
         self.discover()
 
@@ -247,6 +248,7 @@ class Controller(polyinterface.Controller):
 
     def stop(self):
         self.stopping = True
+        self.http.close()
         LOGGER.debug('Stopping WeatherFlow node server.')
 
     def check_units(self):
@@ -291,43 +293,54 @@ class Controller(polyinterface.Controller):
         return st
 
     def query_data(self):
+        LOGGER.info('Query WeatherFlow server for observation data')
         path_str = '/swd/rest/observations/station/'
         path_str += self.station
         path_str += '?api_key=6c8c96f9-e561-43dd-b173-5198d8797e0a'
 
         try:
-            http = urllib3.HTTPConnectionPool('swd.weatherflow.com', maxsize=1)
+            #http = urllib3.HTTPConnectionPool('swd.weatherflow.com', maxsize=1)
 
-            # Get station meta data. We really want AIR height above ground
-            c = http.request('GET', path_str)
+            # Get station observation data
+            LOGGER.info(' -  ' + path_str)
+            c = self.http.request('GET', path_str)
             data = json.loads(c.data.decode('utf-8'))
-
-            self.nodes['temperature'].setDriver('ST', data['obs'][0]['air_temperature'])
-            self.nodes['pressure'].setDriver('ST', data['obs'][0]['barometric_pressure'])
-            self.nodes['pressure'].setDriver('GV0', data['obs'][0]['sea_level_pressure'])
-            self.nodes['humidity'].setDriver('ST', data['obs'][0]['relative_humidity'])
-
-            rr = (data['obs'][0]['precip'] * 60) / 60
-            self.nodes['rain'].setDriver('ST', rr)
-            self.nodes['rain'].setDriver('GV0', data['obs'][0]['precip_accum_last_1hr'])
-            self.nodes['rain'].setDriver('GV1', data['obs'][0]['precip_accum_lst_24hr'])
-            self.nodes['wind'].setDriver('ST', data['obs'][0]['wind_avg'])
-            self.nodes['wind'].setDriver('GV0', data['obs'][0]['wind_direction'])
-            self.nodes['wind'].setDriver('GV1', data['obs'][0]['wind_gust'])
-            self.nodes['wind'].setDriver('GV3', data['obs'][0]['wind_lull'])
-            self.nodes['light'].setDriver('ST', data['obs'][0]['uv'])
-            self.nodes['light'].setDriver('GV0', data['obs'][0]['solar_radiataion'])
-            self.nodes['light'].setDriver('GV1', data['obs'][0]['brightness'])
-            self.nodes['lightning'].setDriver('ST', data['obs'][0]['lightning_strike_count_last_3hr'])
-            self.nodes['lightning'].setDriver('GV0', data['obs'][0]['lightning_strike_last_distance'])
-            self.nodes['temperature'].setDriver('GV0', data['obs'][0]['feels_like'])
-            self.nodes['temperature'].setDriver('GV1', data['obs'][0]['dew_point'])
-            self.nodes['temperature'].setDriver('GV2', data['obs'][0]['heat_index'])
-            self.nodes['temperature'].setDriver('GV3', data['obs'][0]['wind_chill'])
-
-            s.close()
         except:
+            close(c)
             LOGGER.error('Server Query failed')
+            return
+
+        self.nodes['temperature'].setDriver('ST', data['obs'][0]['air_temperature'])
+        self.nodes['pressure'].setDriver('ST', data['obs'][0]['barometric_pressure'])
+        self.nodes['pressure'].setDriver('GV0', data['obs'][0]['sea_level_pressure'])
+        self.nodes['humidity'].setDriver('ST', data['obs'][0]['relative_humidity'])
+
+        #LOGGER.info(data)
+        #r = float(data['obs'][0]['precip'])
+        #LOGGER.info(' - Rain = ' % str(r))
+        #rr = (r * 60) / 60
+        self.nodes['rain'].setDriver('ST', data['obs'][0]['precip'])
+        self.nodes['rain'].setDriver('GV0', data['obs'][0]['precip_accum_last_1hr'])
+        self.nodes['rain'].setDriver('GV1', data['obs'][0]['precip_accum_last_24hr'])
+        self.nodes['rain'].setDriver('GV2', data['obs'][0]['precip_accum_local_yesterday'])
+        self.nodes['wind'].setDriver('ST', data['obs'][0]['wind_avg'])
+        self.nodes['wind'].setDriver('GV0', data['obs'][0]['wind_direction'])
+        self.nodes['wind'].setDriver('GV1', data['obs'][0]['wind_gust'])
+        self.nodes['wind'].setDriver('GV2', data['obs'][0]['wind_lull'])
+        self.nodes['light'].setDriver('ST', data['obs'][0]['uv'])
+        self.nodes['light'].setDriver('GV0', data['obs'][0]['solar_radiation'])
+        self.nodes['light'].setDriver('GV1', data['obs'][0]['brightness'])
+        self.nodes['lightning'].setDriver('ST', data['obs'][0]['lightning_strike_count_last_3hr'])
+        self.nodes['lightning'].setDriver('GV0', data['obs'][0]['lightning_strike_last_distance'])
+        self.nodes['temperature'].setDriver('GV0', data['obs'][0]['feels_like'])
+        self.nodes['temperature'].setDriver('GV1', data['obs'][0]['dew_point'])
+        self.nodes['temperature'].setDriver('GV2', data['obs'][0]['heat_index'])
+        self.nodes['temperature'].setDriver('GV3', data['obs'][0]['wind_chill'])
+        self.nodes['temperature'].setDriver('GV4', data['obs'][0]['wet_bulb_temperature'])
+        self.nodes['temperature'].setDriver('GV5', data['obs'][0]['delta_t'])
+        self.nodes['temperature'].setDriver('GV6', data['obs'][0]['air_density'])
+
+        c.close()
 
     def SetUnits(self, u):
         self.units = u
@@ -360,7 +373,10 @@ class TemperatureNode(polyinterface.Node):
             {'driver': 'GV0', 'value': 0, 'uom': 17}, # feels like
             {'driver': 'GV1', 'value': 0, 'uom': 17}, # dewpoint
             {'driver': 'GV2', 'value': 0, 'uom': 17}, # heat index
-            {'driver': 'GV3', 'value': 0, 'uom': 17}  # windchill
+            {'driver': 'GV3', 'value': 0, 'uom': 17}, # windchill
+            {'driver': 'GV4', 'value': 0, 'uom': 17}, # wet bulb
+            {'driver': 'GV5', 'value': 0, 'uom': 17}, # delta T
+            {'driver': 'GV6', 'value': 0, 'uom': 56}  # density
             ]
 
     def SetUnits(self, u):
@@ -371,6 +387,8 @@ class TemperatureNode(polyinterface.Node):
             self.drivers[2]['uom'] = 4
             self.drivers[3]['uom'] = 4
             self.drivers[4]['uom'] = 4
+            self.drivers[5]['uom'] = 4
+            self.drivers[6]['uom'] = 4
             self.id = 'temperature'
         elif (u == 'uk'):  # C
             self.drivers[0]['uom'] = 4 
@@ -378,6 +396,8 @@ class TemperatureNode(polyinterface.Node):
             self.drivers[2]['uom'] = 4
             self.drivers[3]['uom'] = 4
             self.drivers[4]['uom'] = 4
+            self.drivers[5]['uom'] = 4
+            self.drivers[6]['uom'] = 4
             self.id = 'temperatureUK'
         elif (u == 'us'):   # F
             self.drivers[0]['uom'] = 17
@@ -385,6 +405,8 @@ class TemperatureNode(polyinterface.Node):
             self.drivers[2]['uom'] = 17
             self.drivers[3]['uom'] = 17
             self.drivers[4]['uom'] = 17
+            self.drivers[5]['uom'] = 17
+            self.drivers[6]['uom'] = 17
             self.id = 'temperatureUS'
 
     def Dewpoint(self, t, h):
@@ -435,8 +457,9 @@ class TemperatureNode(polyinterface.Node):
             return round((hi - 32) / 1.8, 1)
 
     def setDriver(self, driver, value):
-        if (self.units == "us"):
-            value = (value * 1.8) + 32  # convert to F
+        if (driver != "GV6"):
+            if (self.units == "us"):
+                value = (value * 1.8) + 32  # convert to F
 
         super(TemperatureNode, self).setDriver(driver, round(value, 1), report=True, force=True)
 
@@ -547,7 +570,7 @@ class WindNode(polyinterface.Node):
             {'driver': 'ST', 'value': 0, 'uom': 32},  # speed
             {'driver': 'GV0', 'value': 0, 'uom': 76}, # direction
             {'driver': 'GV1', 'value': 0, 'uom': 32}, # gust
-            {'driver': 'GV3', 'value': 0, 'uom': 32}  # lull
+            {'driver': 'GV2', 'value': 0, 'uom': 32}  # lull
             ]
 
     def SetUnits(self, u):
@@ -555,17 +578,17 @@ class WindNode(polyinterface.Node):
         if (u == 'metric'):
             self.drivers[0]['uom'] = 32
             self.drivers[2]['uom'] = 32
-            self.drivers[4]['uom'] = 32
+            self.drivers[3]['uom'] = 32
             self.id = 'wind'
         elif (u == 'uk'): 
             self.drivers[0]['uom'] = 48
             self.drivers[2]['uom'] = 48
-            self.drivers[4]['uom'] = 48
+            self.drivers[3]['uom'] = 48
             self.id = 'windUK'
         elif (u == 'us'): 
             self.drivers[0]['uom'] = 48
             self.drivers[2]['uom'] = 48
-            self.drivers[4]['uom'] = 48
+            self.drivers[3]['uom'] = 48
             self.id = 'windUS'
 
     def setDriver(self, driver, value):
@@ -582,10 +605,7 @@ class PrecipitationNode(polyinterface.Node):
             {'driver': 'ST', 'value': 0, 'uom': 46},  # rate
             {'driver': 'GV0', 'value': 0, 'uom': 82}, # hourly
             {'driver': 'GV1', 'value': 0, 'uom': 82}, # daily
-            {'driver': 'GV2', 'value': 0, 'uom': 82}, # weekly
-            {'driver': 'GV3', 'value': 0, 'uom': 82}, # monthly
-            {'driver': 'GV4', 'value': 0, 'uom': 82}, # yearly
-            {'driver': 'GV5', 'value': 0, 'uom': 82}  # yesterday
+            {'driver': 'GV2', 'value': 0, 'uom': 82}  # yesterday
             ]
     hourly_rain = 0
     daily_rain = 0

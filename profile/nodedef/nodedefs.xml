@@ -5,10 +5,6 @@
         <editors />
         <sts>
 		<st id="ST" editor="bool" />
-		<st id="GV0" editor="I_VOLTS" />
-		<st id="GV1" editor="I_VOLTS" />
-		<st id="GV2" editor="I_RSSI" />
-		<st id="GV3" editor="I_RSSI" />
 		<st id="GV4" editor="I_SECONDS" />
 	</sts>
         <cmds>
@@ -33,6 +29,9 @@
             <st id="GV1" editor="I_TEMP_C" />
             <st id="GV2" editor="I_TEMP_C" />
             <st id="GV3" editor="I_TEMP_C" />
+            <st id="GV4" editor="I_TEMP_C" />
+            <st id="GV5" editor="I_TEMP_C" />
+            <st id="GV6" editor="I_DENSITY" />
         </sts>
     </nodeDef>
     <nodeDef id="temperatureUK" nodeType="139" nls="139T">
@@ -43,6 +42,9 @@
             <st id="GV1" editor="I_TEMP_C" />
             <st id="GV2" editor="I_TEMP_C" />
             <st id="GV3" editor="I_TEMP_C" />
+            <st id="GV4" editor="I_TEMP_C" />
+            <st id="GV5" editor="I_TEMP_C" />
+            <st id="GV6" editor="I_DENSITY" />
         </sts>
     </nodeDef>
     <nodeDef id="temperatureUS" nodeType="139" nls="139T">
@@ -53,6 +55,9 @@
             <st id="GV1" editor="I_TEMP_F" />
             <st id="GV2" editor="I_TEMP_F" />
             <st id="GV3" editor="I_TEMP_F" />
+            <st id="GV4" editor="I_TEMP_F" />
+            <st id="GV5" editor="I_TEMP_F" />
+            <st id="GV6" editor="I_DENSITY" />
         </sts>
     </nodeDef>
 
@@ -94,8 +99,7 @@
             <st id="ST" editor="I_KPH" />
             <st id="GV0" editor="I_DEGREE" />
             <st id="GV1" editor="I_KPH" />
-            <st id="GV2" editor="I_DEGREE" />
-            <st id="GV3" editor="I_KPH" />
+            <st id="GV2" editor="I_KPH" />
         </sts>
     </nodeDef>
     <nodeDef id="windUK" nodeType="139" nls="139W">
@@ -104,8 +108,7 @@
             <st id="ST" editor="I_MPH" />
             <st id="GV0" editor="I_DEGREE" />
             <st id="GV1" editor="I_MPH" />
-            <st id="GV2" editor="I_DEGREE" />
-            <st id="GV3" editor="I_MPH" />
+            <st id="GV2" editor="I_MPH" />
         </sts>
     </nodeDef>
     <nodeDef id="windUS" nodeType="139" nls="139W">
@@ -114,8 +117,7 @@
             <st id="ST" editor="I_MPH" />
             <st id="GV0" editor="I_DEGREE" />
             <st id="GV1" editor="I_MPH" />
-            <st id="GV2" editor="I_DEGREE" />
-            <st id="GV3" editor="I_MPH" />
+            <st id="GV2" editor="I_MPH" />
         </sts>
     </nodeDef>
 
@@ -126,9 +128,6 @@
             <st id="GV0" editor="I_MM" />
             <st id="GV1" editor="I_MM" />
             <st id="GV2" editor="I_MM" />
-            <st id="GV3" editor="I_MM" />
-            <st id="GV4" editor="I_MM" />
-            <st id="GV5" editor="I_MM" />
         </sts>
     </nodeDef>
     <nodeDef id="precipitationUK" nodeType="139" nls="139R">
@@ -138,9 +137,6 @@
             <st id="GV0" editor="I_MM" />
             <st id="GV1" editor="I_MM" />
             <st id="GV2" editor="I_MM" />
-            <st id="GV3" editor="I_MM" />
-            <st id="GV4" editor="I_MM" />
-            <st id="GV5" editor="I_MM" />
         </sts>
     </nodeDef>
     <nodeDef id="precipitationUS" nodeType="139" nls="139R">
@@ -150,9 +146,6 @@
             <st id="GV0" editor="I_INCHES" />
             <st id="GV1" editor="I_INCHES" />
             <st id="GV2" editor="I_INCHES" />
-            <st id="GV3" editor="I_INCHES" />
-            <st id="GV4" editor="I_INCHES" />
-            <st id="GV5" editor="I_INCHES" />
         </sts>
     </nodeDef>
 

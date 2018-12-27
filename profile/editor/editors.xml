@@ -98,6 +98,9 @@
 	<editor id="I_RSSI">
 		<range uom="25" min="-500" max="0" prec="0" />
 	</editor>
+	<editor id="I_DENSITY">
+		<range uom="56" min="0" max="100" prec="3" />
+	</editor>
 
 	<!-- Boolean -->
 	<editor id="bool">

@@ -23,6 +23,9 @@ ST-139T-GV0-NAME = Apparent Temperature
 ST-139T-GV1-NAME = DewPoint
 ST-139T-GV2-NAME = Heat Index
 ST-139T-GV3-NAME = Windchill
+ST-139T-GV4-NAME = Wet Bulb
+ST-139T-GV5-NAME = Delta T
+ST-139T-GV6-NAME = Air Density
 
 ND-humidity-NAME = Humidity
 ND-humidity-ICON = Input
@@ -47,8 +50,7 @@ ND-windUS-ICON = Input
 ST-139W-ST-NAME = Wind Speed
 ST-139W-GV0-NAME = Wind Direction
 ST-139W-GV1-NAME = Gust Speed
-ST-139W-GV2-NAME = Gust Direction
-ST-139W-GV3-NAME = Lull Speed
+ST-139W-GV2-NAME = Lull Speed
 
 ND-precipitation-NAME = Rainfall
 ND-precipitation-ICON = Input
@@ -59,10 +61,7 @@ ND-precipitationUS-ICON = Input
 ST-139R-ST-NAME = Rain Rate
 ST-139R-GV0-NAME = Hourly Rainfall
 ST-139R-GV1-NAME = Daily Rainfall
-ST-139R-GV2-NAME = Weekly Rainfall
-ST-139R-GV3-NAME = Monthly Rainfall
-ST-139R-GV4-NAME = Yearly Rainfall
-ST-139R-GV5-NAME = Yesterday Rainfall
+ST-139R-GV2-NAME = Yesterday Rainfall
 
 ND-light-NAME = Light
 ND-light-ICON = Input
