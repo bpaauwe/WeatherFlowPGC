@@ -315,7 +315,7 @@ class Controller(polyinterface.Controller):
         self.nodes['pressure'].setDriver('GV0', data['obs'][0]['sea_level_pressure'])
         self.nodes['humidity'].setDriver('ST', data['obs'][0]['relative_humidity'])
 
-        #LOGGER.info(data)
+        LOGGER.info(data)
         #r = float(data['obs'][0]['precip'])
         #LOGGER.info(' - Rain = ' % str(r))
         #rr = (r * 60) / 60
@@ -460,8 +460,9 @@ class TemperatureNode(polyinterface.Node):
         if (driver != "GV6"):
             if (self.units == "us"):
                 value = (value * 1.8) + 32  # convert to F
+            value = round(value, 1)
 
-        super(TemperatureNode, self).setDriver(driver, round(value, 1), report=True, force=True)
+        super(TemperatureNode, self).setDriver(driver, value, report=True, force=True)
 
 
 
@@ -684,27 +685,18 @@ class PrecipitationNode(polyinterface.Node):
             self.drivers[1]['uom'] = 82
             self.drivers[2]['uom'] = 82
             self.drivers[3]['uom'] = 82
-            self.drivers[4]['uom'] = 82
-            self.drivers[5]['uom'] = 82
-            self.drivers[6]['uom'] = 82
             self.id = 'precipitation'
         elif (u == 'uk'): 
             self.drivers[0]['uom'] = 46
             self.drivers[1]['uom'] = 82
             self.drivers[2]['uom'] = 82
             self.drivers[3]['uom'] = 82
-            self.drivers[4]['uom'] = 82
-            self.drivers[5]['uom'] = 82
-            self.drivers[6]['uom'] = 82
             self.id = 'precipitationUK'
         elif (u == 'us'): 
             self.drivers[0]['uom'] = 24
             self.drivers[1]['uom'] = 105
             self.drivers[2]['uom'] = 105
             self.drivers[3]['uom'] = 105
-            self.drivers[4]['uom'] = 105
-            self.drivers[5]['uom'] = 105
-            self.drivers[6]['uom'] = 105
             self.id = 'precipitationUS'
 
     def hourly_accumulation(self, r):
