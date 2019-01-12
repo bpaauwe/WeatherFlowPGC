@@ -4,6 +4,7 @@
     "type": "python3",
     "executable": "weatherflow.py",
     "install": "install.sh",
+    "install_cloud": "install_cloud.sh",
     "description": "Access weather data from WeatherFlow cloud servers",
     "notice": "see http://www.weatherflow.com for more information",
     "shortPoll": "5",
