@@ -3,7 +3,12 @@
 Polyglot v2 node server for WeatherFlow Weather Station data.
 Copyright (c) 2018 Robert Paauwe
 """
-import polyinterface
+CLOUD = False
+try:
+    import polyinterface
+except ImportError:
+    import pgc_interface as polyinterface
+    CLOUD = True
 import sys
 import time
 import datetime
