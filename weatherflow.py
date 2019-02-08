@@ -383,35 +383,37 @@ class TemperatureNode(polyinterface.Node):
             {'driver': 'GV5', 'value': 0, 'uom': 17}, # delta T
             {'driver': 'GV6', 'value': 0, 'uom': 56}  # density
             ]
+    uoms = {
+            'ST': 17,
+            'GV0': 17,
+            'GV1': 17,
+            'GV2': 17,
+            'GV3': 17,
+            'GV4': 17,
+            'GV5': 17,
+            'GV6': 56
+            }
+    
+    def SetMetric(self):
+        for drv in self.uoms:
+            if drv != 'GV6':
+                self.uoms[drv] = 4;
+
+    def SetImperial(self):
+        for drv in self.uoms:
+            if drv != 'GV6':
+                self.uoms[drv] = 17;
 
     def SetUnits(self, u):
         self.units = u
         if (u == 'metric'):  # C
-            self.drivers[0]['uom'] = 4
-            self.drivers[1]['uom'] = 4
-            self.drivers[2]['uom'] = 4
-            self.drivers[3]['uom'] = 4
-            self.drivers[4]['uom'] = 4
-            self.drivers[5]['uom'] = 4
-            self.drivers[6]['uom'] = 4
+            self.SetMetric()
             self.id = 'temperature'
         elif (u == 'uk'):  # C
-            self.drivers[0]['uom'] = 4 
-            self.drivers[1]['uom'] = 4
-            self.drivers[2]['uom'] = 4
-            self.drivers[3]['uom'] = 4
-            self.drivers[4]['uom'] = 4
-            self.drivers[5]['uom'] = 4
-            self.drivers[6]['uom'] = 4
+            self.SetMetric()
             self.id = 'temperatureUK'
         elif (u == 'us'):   # F
-            self.drivers[0]['uom'] = 17
-            self.drivers[1]['uom'] = 17
-            self.drivers[2]['uom'] = 17
-            self.drivers[3]['uom'] = 17
-            self.drivers[4]['uom'] = 17
-            self.drivers[5]['uom'] = 17
-            self.drivers[6]['uom'] = 17
+            self.SetImperial()
             self.id = 'temperatureUS'
 
     def Dewpoint(self, t, h):
@@ -467,7 +469,7 @@ class TemperatureNode(polyinterface.Node):
                 value = (value * 1.8) + 32  # convert to F
             value = round(value, 1)
 
-        super(TemperatureNode, self).setDriver(driver, value, report=True, force=True)
+        super(TemperatureNode, self).setDriver(driver, value, report=True, force=True, uom=self.uoms[driver])
 
 
 
@@ -492,6 +494,11 @@ class PressureNode(polyinterface.Node):
             {'driver': 'GV0', 'value': 0, 'uom': 117}, # rel (sealevel) press
             {'driver': 'GV1', 'value': 0, 'uom': 25}  # trend
             ]
+    uoms = {
+            'ST': 117,
+            'GV0': 117,
+            'GV1': 25
+            }
     mytrend = []
 
 
@@ -501,16 +508,19 @@ class PressureNode(polyinterface.Node):
         # the node def?
         self.units = u
         if (u == 'metric'):  # millibar
-            self.drivers[0]['uom'] = 117
-            self.drivers[1]['uom'] = 117
+            for drv in self.uoms:
+                if drv != 'GV1':
+                    self.uoms[drv] = '117'
             self.id = 'pressure'
         elif (u == 'uk'):  # millibar
-            self.drivers[0]['uom'] = 117 
-            self.drivers[1]['uom'] = 117
+            for drv in self.uoms:
+                if drv != 'GV1':
+                    self.uoms[drv] = '117'
             self.id = 'pressureUK'
         elif (u == 'us'):   # inHg
-            self.drivers[0]['uom'] = 23
-            self.drivers[1]['uom'] = 23
+            for drv in self.uoms:
+                if drv != 'GV1':
+                    self.uoms[drv] = '23'
             self.id = 'pressureUS'
 
     # convert station pressure in millibars to sealevel pressure
@@ -565,7 +575,7 @@ class PressureNode(polyinterface.Node):
     def setDriver(self, driver, value):
         if (self.units == 'us' and driver != 'GV1' ):
             value = round(value * 0.02952998751, 3)
-        super(PressureNode, self).setDriver(driver, value, report=True, force=True)
+        super(PressureNode, self).setDriver(driver, value, report=True, force=True, uom=self.uoms[driver])
 
 
 class WindNode(polyinterface.Node):
@@ -578,30 +588,36 @@ class WindNode(polyinterface.Node):
             {'driver': 'GV1', 'value': 0, 'uom': 32}, # gust
             {'driver': 'GV2', 'value': 0, 'uom': 32}  # lull
             ]
+    uoms = {
+            'ST': 32,
+            'GV0': 76,
+            'GV1': 32,
+            'GV2': 32
+            }
 
     def SetUnits(self, u):
         self.units = u
         if (u == 'metric'):
-            self.drivers[0]['uom'] = 32
-            self.drivers[2]['uom'] = 32
-            self.drivers[3]['uom'] = 32
+            for drv in self.uoms:
+                if drv != 'GV0':
+                    self.uoms[drv] = '32'
             self.id = 'wind'
         elif (u == 'uk'): 
-            self.drivers[0]['uom'] = 48
-            self.drivers[2]['uom'] = 48
-            self.drivers[3]['uom'] = 48
+            for drv in self.uoms:
+                if drv != 'GV0':
+                    self.uoms[drv] = '48'
             self.id = 'windUK'
         elif (u == 'us'): 
-            self.drivers[0]['uom'] = 48
-            self.drivers[2]['uom'] = 48
-            self.drivers[3]['uom'] = 48
+            for drv in self.uoms:
+                if drv != 'GV0':
+                    self.uoms[drv] = '48'
             self.id = 'windUS'
 
     def setDriver(self, driver, value):
         if (driver == 'ST' or driver == 'GV1' or driver == 'GV3'):
             if (self.units != 'metric'):
                 value = round(value / 1.609344, 2)
-        super(WindNode, self).setDriver(driver, value, report=True, force=True)
+        super(WindNode, self).setDriver(driver, value, report=True, force=True, uom=self.uoms[driver])
 
 class PrecipitationNode(polyinterface.Node):
     id = 'precipitation'
@@ -613,6 +629,12 @@ class PrecipitationNode(polyinterface.Node):
             {'driver': 'GV1', 'value': 0, 'uom': 82}, # daily
             {'driver': 'GV2', 'value': 0, 'uom': 82}  # yesterday
             ]
+    uoms = {
+            'ST': 46,
+            'GV0': 82,
+            'GV1': 82,
+            'GV2': 82
+            }
     hourly_rain = 0
     daily_rain = 0
     weekly_rain = 0
@@ -686,22 +708,25 @@ class PrecipitationNode(polyinterface.Node):
     def SetUnits(self, u):
         self.units = u
         if (u == 'metric'):
-            self.drivers[0]['uom'] = 46
-            self.drivers[1]['uom'] = 82
-            self.drivers[2]['uom'] = 82
-            self.drivers[3]['uom'] = 82
+            for drv in self.uoms:
+                if drv != 'ST':
+                    self.uoms[drv] = '82'
+                else:
+                    self.uoms[drv] = '46'
             self.id = 'precipitation'
         elif (u == 'uk'): 
-            self.drivers[0]['uom'] = 46
-            self.drivers[1]['uom'] = 82
-            self.drivers[2]['uom'] = 82
-            self.drivers[3]['uom'] = 82
+            for drv in self.uoms:
+                if drv != 'ST':
+                    self.uoms[drv] = '82'
+                else:
+                    self.uoms[drv] = '46'
             self.id = 'precipitationUK'
         elif (u == 'us'): 
-            self.drivers[0]['uom'] = 24
-            self.drivers[1]['uom'] = 105
-            self.drivers[2]['uom'] = 105
-            self.drivers[3]['uom'] = 105
+            for drv in self.uoms:
+                if drv != 'ST':
+                    self.uoms[drv] = '105'
+                else:
+                    self.uoms[drv] = '24'
             self.id = 'precipitationUS'
 
     def hourly_accumulation(self, r):
@@ -757,7 +782,7 @@ class PrecipitationNode(polyinterface.Node):
     def setDriver(self, driver, value):
         if (self.units == 'us'):
             value = round(value * 0.03937, 2)
-        super(PrecipitationNode, self).setDriver(driver, value, report=True, force=True)
+        super(PrecipitationNode, self).setDriver(driver, value, report=True, force=True, uom=self.uoms[driver])
 
 class LightNode(polyinterface.Node):
     id = 'light'
@@ -768,6 +793,11 @@ class LightNode(polyinterface.Node):
             {'driver': 'GV0', 'value': 0, 'uom': 74},  # solar radiation
             {'driver': 'GV1', 'value': 0, 'uom': 36},  # Lux
             ]
+    uoms = {
+            'ST': 71,
+            'GV0': 74,
+            'GV1': 36
+            }
 
     def SetUnits(self, u):
         self.units = u
@@ -783,27 +813,31 @@ class LightningNode(polyinterface.Node):
             {'driver': 'ST', 'value': 0, 'uom': 25},  # Strikes
             {'driver': 'GV0', 'value': 0, 'uom': 83},  # Distance
             ]
+    uoms = {
+            'ST': 25,
+            'GV0': 83
+            }
 
     def SetUnits(self, u):
         self.units = u
         if (u == 'metric'):
-            self.drivers[0]['uom'] = 25
-            self.drivers[1]['uom'] = 83
+            self.uoms['ST'] = 83
+            self.uoms['GV0'] = 25
             self.id = 'lightning'
         elif (u == 'uk'): 
-            self.drivers[0]['uom'] = 25
-            self.drivers[1]['uom'] = 116
+            self.uoms['ST'] = 116
+            self.uoms['GV0'] = 25
             self.id = 'lightningUK'
         elif (u == 'us'): 
-            self.drivers[0]['uom'] = 25
-            self.drivers[1]['uom'] = 116
+            self.uoms['ST'] = 116
+            self.uoms['GV0'] = 25
             self.id = 'lightningUS'
 
     def setDriver(self, driver, value):
         if (driver == 'GV0'):
             if (self.units != 'metric'):
                 value = round(value / 1.609344, 1)
-        super(LightningNode, self).setDriver(driver, value, report=True, force=True)
+        super(LightningNode, self).setDriver(driver, value, report=True, force=True, uom=self.uoms[driver])
 
 
 if __name__ == "__main__":
