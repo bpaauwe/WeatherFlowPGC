@@ -14,8 +14,8 @@
     	{
     		"title": "WeatherFlow: A node server for WeatherFlow",
     		"author": "Bob Paauwe",
-    		"version": "0.0.1",
-    		"date": "December 27, 2018",
+    		"version": "0.0.2",
+    		"date": "February 28, 2019",
     		"source": "https://github.com/bpaauwe/WeatherFlowPGC",
             "license": "https://github.com/bpaauwe/WeatherFlowPGC/LICENSE"
 		}
