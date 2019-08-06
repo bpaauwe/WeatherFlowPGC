@@ -326,7 +326,7 @@ class Controller(polyinterface.Controller):
         #rr = (r * 60) / 60
         self.nodes['rain'].setDriver('ST', data['obs'][0]['precip'])
         self.nodes['rain'].setDriver('GV0', data['obs'][0]['precip_accum_last_1hr'])
-        self.nodes['rain'].setDriver('GV1', data['obs'][0]['precip_accum_last_24hr'])
+        self.nodes['rain'].setDriver('GV1', data['obs'][0]['precip_accum_local_day'])
         self.nodes['rain'].setDriver('GV2', data['obs'][0]['precip_accum_local_yesterday'])
         self.nodes['wind'].setDriver('ST', data['obs'][0]['wind_avg'])
         self.nodes['wind'].setDriver('GV0', data['obs'][0]['wind_direction'])
