@@ -394,27 +394,32 @@ class TemperatureNode(polyinterface.Node):
             'GV6': 56
             }
     
-    def SetMetric(self):
-        for drv in self.uoms:
-            if drv != 'GV6':
-                self.uoms[drv] = 4;
-
-    def SetImperial(self):
-        for drv in self.uoms:
-            if drv != 'GV6':
-                self.uoms[drv] = 17;
-
     def SetUnits(self, u):
         self.units = u
         if (u == 'metric'):  # C
-            self.SetMetric()
-            self.id = 'temperature'
+            self.uoms['ST'] = 4
+            self.uoms['GV0'] = 4
+            self.uoms['GV1'] = 4
+            self.uoms['GV2'] = 4
+            self.uoms['GV3'] = 4
+            self.uoms['GV4'] = 4
+            self.uoms['GV5'] = 4
         elif (u == 'uk'):  # C
-            self.SetMetric()
-            self.id = 'temperatureUK'
+            self.uoms['ST'] = 4
+            self.uoms['GV0'] = 4
+            self.uoms['GV1'] = 4
+            self.uoms['GV2'] = 4
+            self.uoms['GV3'] = 4
+            self.uoms['GV4'] = 4
+            self.uoms['GV5'] = 4
         elif (u == 'us'):   # F
-            self.SetImperial()
-            self.id = 'temperatureUS'
+            self.uoms['ST'] = 17
+            self.uoms['GV0'] = 17
+            self.uoms['GV1'] = 17
+            self.uoms['GV2'] = 17
+            self.uoms['GV3'] = 17
+            self.uoms['GV4'] = 17
+            self.uoms['GV5'] = 17
 
     def Dewpoint(self, t, h):
         b = (17.625 * t) / (243.04 + t)
@@ -508,20 +513,14 @@ class PressureNode(polyinterface.Node):
         # the node def?
         self.units = u
         if (u == 'metric'):  # millibar
-            for drv in self.uoms:
-                if drv != 'GV1':
-                    self.uoms[drv] = '117'
-            self.id = 'pressure'
+            self.uoms['ST'] = 117
+            self.uoms['GV0'] = 117
         elif (u == 'uk'):  # millibar
-            for drv in self.uoms:
-                if drv != 'GV1':
-                    self.uoms[drv] = '117'
-            self.id = 'pressureUK'
+            self.uoms['ST'] = 117
+            self.uoms['GV0'] = 117
         elif (u == 'us'):   # inHg
-            for drv in self.uoms:
-                if drv != 'GV1':
-                    self.uoms[drv] = '23'
-            self.id = 'pressureUS'
+            self.uoms['ST'] = 23
+            self.uoms['GV0'] = 23
 
     # convert station pressure in millibars to sealevel pressure
     def toSeaLevel(self, station, elevation):
@@ -598,20 +597,17 @@ class WindNode(polyinterface.Node):
     def SetUnits(self, u):
         self.units = u
         if (u == 'metric'):
-            for drv in self.uoms:
-                if drv != 'GV0':
-                    self.uoms[drv] = '32'
-            self.id = 'wind'
+            self.uoms['ST'] = 32
+            self.uoms['GV1'] = '23'
+            self.uoms['GV2'] = '23'
         elif (u == 'uk'): 
-            for drv in self.uoms:
-                if drv != 'GV0':
-                    self.uoms[drv] = '48'
-            self.id = 'windUK'
+            self.uoms['ST'] = 48
+            self.uoms['GV1'] = '48'
+            self.uoms['GV2'] = '48'
         elif (u == 'us'): 
-            for drv in self.uoms:
-                if drv != 'GV0':
-                    self.uoms[drv] = '48'
-            self.id = 'windUS'
+            self.uoms['ST'] = 48
+            self.uoms['GV1'] = '48'
+            self.uoms['GV2'] = '48'
 
     def setDriver(self, driver, value):
         if (driver == 'ST' or driver == 'GV1' or driver == 'GV3'):
@@ -708,26 +704,20 @@ class PrecipitationNode(polyinterface.Node):
     def SetUnits(self, u):
         self.units = u
         if (u == 'metric'):
-            for drv in self.uoms:
-                if drv != 'ST':
-                    self.uoms[drv] = '82'
-                else:
-                    self.uoms[drv] = '46'
-            self.id = 'precipitation'
+            self.uoms['ST'] = 46
+            self.uoms['GV0'] = 82
+            self.uoms['GV1'] = 82
+            self.uoms['GV2'] = 82
         elif (u == 'uk'): 
-            for drv in self.uoms:
-                if drv != 'ST':
-                    self.uoms[drv] = '82'
-                else:
-                    self.uoms[drv] = '46'
-            self.id = 'precipitationUK'
+            self.uoms['ST'] = 46
+            self.uoms['GV0'] = 82
+            self.uoms['GV1'] = 82
+            self.uoms['GV2'] = 82
         elif (u == 'us'): 
-            for drv in self.uoms:
-                if drv != 'ST':
-                    self.uoms[drv] = '105'
-                else:
-                    self.uoms[drv] = '24'
-            self.id = 'precipitationUS'
+            self.uoms['ST'] = 24
+            self.uoms['GV0'] = 105
+            self.uoms['GV1'] = 105
+            self.uoms['GV2'] = 105
 
     def hourly_accumulation(self, r):
         current_hour = datetime.datetime.now().hour
@@ -823,15 +813,12 @@ class LightningNode(polyinterface.Node):
         if (u == 'metric'):
             self.uoms['ST'] = 83
             self.uoms['GV0'] = 25
-            self.id = 'lightning'
         elif (u == 'uk'): 
             self.uoms['ST'] = 116
             self.uoms['GV0'] = 25
-            self.id = 'lightningUK'
         elif (u == 'us'): 
             self.uoms['ST'] = 116
             self.uoms['GV0'] = 25
-            self.id = 'lightningUS'
 
     def setDriver(self, driver, value):
         if (driver == 'GV0'):
