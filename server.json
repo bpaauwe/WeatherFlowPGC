@@ -9,13 +9,13 @@
     "notice": "see http://www.weatherflow.com for more information",
     "shortPoll": "5",
     "longPoll": "60",
-    "profile_version": "0.0.1",
+    "profile_version": "1.0.0",
     "credits": [
     	{
     		"title": "WeatherFlow: A node server for WeatherFlow",
     		"author": "Bob Paauwe",
-    		"version": "0.0.2",
-    		"date": "February 28, 2019",
+    		"version": "1.0.0",
+    		"date": "August 07, 2019",
     		"source": "https://github.com/bpaauwe/WeatherFlowPGC",
             "license": "https://github.com/bpaauwe/WeatherFlowPGC/LICENSE"
 		}

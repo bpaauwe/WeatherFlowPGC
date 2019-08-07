@@ -49,5 +49,10 @@ The WeatherFlow nodeserver keeps track of the version number and when a profile 
 
 # Release Notes
 
+- 1.0.0 08/07/2019
+   - Rewrite UOM handling and clean up profile files
+   - Handle missing observation data properly
+   - Handle both indoor and outdoor observations with priority given to outdoor
+   - Only send data values when they change
 - 0.0.1 12/27/2018
    - Initial version published to github
