@@ -383,32 +383,6 @@ class Controller(polyinterface.Controller):
         self.mySetDriver('temperature', 'GV5', 'delta_t' + suffix, data)
         self.mySetDriver('temperature', 'GV6', 'air_density' + suffix, data)
 
-        #self.nodes['temperature'].setDriver('ST', data['obs'][0]['air_temperature'+suffix])
-        #self.nodes['pressure'].setDriver('ST', data['obs'][0]['barometric_pressure'+suffix])
-        #self.nodes['pressure'].setDriver('GV0', data['obs'][0]['sea_level_pressure'+suffix])
-        #self.nodes['humidity'].setDriver('ST', data['obs'][0]['relative_humidity'+suffix])
-        #self.nodes['rain'].setDriver('ST', data['obs'][0]['precip'+suffix])
-        #self.nodes['rain'].setDriver('GV0', data['obs'][0]['precip_accum_last_1hr'+suffix])
-        #self.nodes['rain'].setDriver('GV1', data['obs'][0]['precip_accum_local_day'+suffix])
-        #self.nodes['rain'].setDriver('GV2', data['obs'][0]['precip_accum_local_yesterday'+suffix])
-        #self.nodes['wind'].setDriver('ST', data['obs'][0]['wind_avg'+suffix])
-        #self.nodes['wind'].setDriver('GV0', data['obs'][0]['wind_direction'+suffix])
-        #self.nodes['wind'].setDriver('GV1', data['obs'][0]['wind_gust'+suffix])
-        #self.nodes['wind'].setDriver('GV2', data['obs'][0]['wind_lull'+suffix])
-        #self.nodes['light'].setDriver('ST', data['obs'][0]['uv'+suffix])
-        #self.nodes['light'].setDriver('GV0', data['obs'][0]['solar_radiation'+suffix])
-        #self.nodes['light'].setDriver('GV1', data['obs'][0]['brightness'+suffix])
-        #self.nodes['lightning'].setDriver('ST', data['obs'][0]['lightning_strike_count_last_3hr'+suffix])
-        #self.nodes['lightning'].setDriver('GV0', data['obs'][0]['lightning_strike_last_distance'+suffix])
-        #self.nodes['temperature'].setDriver('GV0', data['obs'][0]['feels_like'+suffix])
-        #self.nodes['temperature'].setDriver('GV1', data['obs'][0]['dew_point'+suffix])
-        #self.nodes['temperature'].setDriver('GV2', data['obs'][0]['heat_index'+suffix])
-        #self.nodes['temperature'].setDriver('GV3', data['obs'][0]['wind_chill'+suffix])
-        #self.nodes['temperature'].setDriver('GV4', data['obs'][0]['wet_bulb_temperature'+suffix])
-        #self.nodes['temperature'].setDriver('GV5', data['obs'][0]['delta_t'+suffix])
-        #self.nodes['temperature'].setDriver('GV6', data['obs'][0]['air_density'+suffix])
-
-
     def SetUnits(self, u):
         self.units = u
 
