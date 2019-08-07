@@ -536,7 +536,7 @@ class TemperatureNode(polyinterface.Node):
                 value = (value * 1.8) + 32  # convert to F
             value = round(value, 1)
 
-        super(TemperatureNode, self).setDriver(driver, value, report=True, force=True, uom=self.uoms[driver])
+        super(TemperatureNode, self).setDriver(driver, value, report=True, force=False, uom=self.uoms[driver])
 
 
 
@@ -550,7 +550,7 @@ class HumidityNode(polyinterface.Node):
         self.units = u
 
     def setDriver(self, driver, value):
-        super(HumidityNode, self).setDriver(driver, value, report=True, force=True)
+        super(HumidityNode, self).setDriver(driver, value, report=True, force=False)
 
 class PressureNode(polyinterface.Node):
     id = 'pressure'
@@ -636,7 +636,7 @@ class PressureNode(polyinterface.Node):
     def setDriver(self, driver, value):
         if (self.units == 'us' and driver != 'GV1' ):
             value = round(value * 0.02952998751, 3)
-        super(PressureNode, self).setDriver(driver, value, report=True, force=True, uom=self.uoms[driver])
+        super(PressureNode, self).setDriver(driver, value, report=True, force=False, uom=self.uoms[driver])
 
 
 class WindNode(polyinterface.Node):
@@ -675,7 +675,7 @@ class WindNode(polyinterface.Node):
         if (driver == 'ST' or driver == 'GV1' or driver == 'GV3'):
             if (self.units != 'metric'):
                 value = round(value / 1.609344, 2)
-        super(WindNode, self).setDriver(driver, value, report=True, force=True, uom=self.uoms[driver])
+        super(WindNode, self).setDriver(driver, value, report=True, force=False, uom=self.uoms[driver])
 
 class PrecipitationNode(polyinterface.Node):
     id = 'precipitation'
@@ -834,7 +834,7 @@ class PrecipitationNode(polyinterface.Node):
     def setDriver(self, driver, value):
         if (self.units == 'us'):
             value = round(value * 0.03937, 2)
-        super(PrecipitationNode, self).setDriver(driver, value, report=True, force=True, uom=self.uoms[driver])
+        super(PrecipitationNode, self).setDriver(driver, value, report=True, force=False, uom=self.uoms[driver])
 
 class LightNode(polyinterface.Node):
     id = 'light'
@@ -855,7 +855,7 @@ class LightNode(polyinterface.Node):
         self.units = u
 
     def setDriver(self, driver, value):
-        super(LightNode, self).setDriver(driver, value, report=True, force=True)
+        super(LightNode, self).setDriver(driver, value, report=True, force=False)
 
 class LightningNode(polyinterface.Node):
     id = 'lightning'
@@ -886,7 +886,7 @@ class LightningNode(polyinterface.Node):
         if (driver == 'GV0'):
             if (self.units != 'metric'):
                 value = round(value / 1.609344, 1)
-        super(LightningNode, self).setDriver(driver, value, report=True, force=True, uom=self.uoms[driver])
+        super(LightningNode, self).setDriver(driver, value, report=True, force=False, uom=self.uoms[driver])
 
 
 if __name__ == "__main__":
