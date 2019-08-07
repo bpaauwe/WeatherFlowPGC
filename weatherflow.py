@@ -660,8 +660,8 @@ class WindNode(polyinterface.Node):
         self.units = u
         if (u == 'metric'):
             self.uoms['ST'] = 32
-            self.uoms['GV1'] = '23'
-            self.uoms['GV2'] = '23'
+            self.uoms['GV1'] = '32'
+            self.uoms['GV2'] = '32'
         elif (u == 'uk'): 
             self.uoms['ST'] = 48
             self.uoms['GV1'] = '48'
