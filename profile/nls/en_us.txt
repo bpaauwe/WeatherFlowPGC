@@ -14,10 +14,6 @@ ST-ctl-GV4-NAME = Hub Seconds Since Seen
 # mynodetype
 ND-temperature-NAME = Temperatures
 ND-temperature-ICON = Input
-ND-temperatureUK-NAME = Temperatures
-ND-temperatureUK-ICON = Input
-ND-temperatureUS-NAME = Temperatures
-ND-temperatureUS-ICON = Input
 ST-139T-ST-NAME = Temperature
 ST-139T-GV0-NAME = Apparent Temperature
 ST-139T-GV1-NAME = DewPoint
@@ -33,20 +29,12 @@ ST-139H-ST-NAME = Humidity
 
 ND-pressure-NAME = Barometric Pressures
 ND-pressure-ICON = Input
-ND-pressureUK-NAME = Barometric Pressures
-ND-pressureUK-ICON = Input
-ND-pressureUS-NAME = Barometric Pressures
-ND-pressureUS-ICON = Input
 ST-139P-ST-NAME = Absolute Pressure
 ST-139P-GV0-NAME = Relative Pressure
 ST-139P-GV1-NAME = Pressure Trend
 
 ND-wind-NAME = Wind
 ND-wind-ICON = Input
-ND-windUK-NAME = Wind
-ND-windUK-ICON = Input
-ND-windUS-NAME = Wind
-ND-windUS-ICON = Input
 ST-139W-ST-NAME = Wind Speed
 ST-139W-GV0-NAME = Wind Direction
 ST-139W-GV1-NAME = Gust Speed
@@ -54,10 +42,6 @@ ST-139W-GV2-NAME = Lull Speed
 
 ND-precipitation-NAME = Rainfall
 ND-precipitation-ICON = Input
-ND-precipitationUK-NAME = Rainfall
-ND-precipitationUK-ICON = Input
-ND-precipitationUS-NAME = Rainfall
-ND-precipitationUS-ICON = Input
 ST-139R-ST-NAME = Rain Rate
 ST-139R-GV0-NAME = Hourly Rainfall
 ST-139R-GV1-NAME = Daily Rainfall
@@ -71,10 +55,6 @@ ST-139L-GV1-NAME = Illumination
 
 ND-lightning-NAME = Lightning Strike
 ND-lightning-ICON = Input
-ND-lightningUK-NAME = Lightning Strike
-ND-lightningUK-ICON = Input
-ND-lightningUS-NAME = Lightning Strike
-ND-lightningUS-ICON = Input
 ST-139S-ST-NAME = Strikes
 ST-139S-GV0-NAME = Distance
 
