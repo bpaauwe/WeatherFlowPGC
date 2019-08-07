@@ -315,37 +315,89 @@ class Controller(polyinterface.Controller):
             LOGGER.error('Server Query failed')
             return
 
-        self.nodes['temperature'].setDriver('ST', data['obs'][0]['air_temperature'])
-        self.nodes['pressure'].setDriver('ST', data['obs'][0]['barometric_pressure'])
-        self.nodes['pressure'].setDriver('GV0', data['obs'][0]['sea_level_pressure'])
-        self.nodes['humidity'].setDriver('ST', data['obs'][0]['relative_humidity'])
-
         LOGGER.info(data)
-        #r = float(data['obs'][0]['precip'])
-        #LOGGER.info(' - Rain = ' % str(r))
-        #rr = (r * 60) / 60
-        self.nodes['rain'].setDriver('ST', data['obs'][0]['precip'])
-        self.nodes['rain'].setDriver('GV0', data['obs'][0]['precip_accum_last_1hr'])
-        self.nodes['rain'].setDriver('GV1', data['obs'][0]['precip_accum_local_day'])
-        self.nodes['rain'].setDriver('GV2', data['obs'][0]['precip_accum_local_yesterday'])
-        self.nodes['wind'].setDriver('ST', data['obs'][0]['wind_avg'])
-        self.nodes['wind'].setDriver('GV0', data['obs'][0]['wind_direction'])
-        self.nodes['wind'].setDriver('GV1', data['obs'][0]['wind_gust'])
-        self.nodes['wind'].setDriver('GV2', data['obs'][0]['wind_lull'])
-        self.nodes['light'].setDriver('ST', data['obs'][0]['uv'])
-        self.nodes['light'].setDriver('GV0', data['obs'][0]['solar_radiation'])
-        self.nodes['light'].setDriver('GV1', data['obs'][0]['brightness'])
-        self.nodes['lightning'].setDriver('ST', data['obs'][0]['lightning_strike_count_last_3hr'])
-        self.nodes['lightning'].setDriver('GV0', data['obs'][0]['lightning_strike_last_distance'])
-        self.nodes['temperature'].setDriver('GV0', data['obs'][0]['feels_like'])
-        self.nodes['temperature'].setDriver('GV1', data['obs'][0]['dew_point'])
-        self.nodes['temperature'].setDriver('GV2', data['obs'][0]['heat_index'])
-        self.nodes['temperature'].setDriver('GV3', data['obs'][0]['wind_chill'])
-        self.nodes['temperature'].setDriver('GV4', data['obs'][0]['wet_bulb_temperature'])
-        self.nodes['temperature'].setDriver('GV5', data['obs'][0]['delta_t'])
-        self.nodes['temperature'].setDriver('GV6', data['obs'][0]['air_density'])
+
+        # What we get back can contain indoor_keys, outdoor_keys or both
+        # if we have outdoor_keys, use those. If we only have indoor_keys
+        # lets switch over and use those.
+
+        if 'outdoor_keys' in data and len(data['outdoor_keys']) > 0:
+            LOGGER.info('Found outdoor keys!')
+            self.obs_data(data, '')
+        elif 'indoor_keys' in data and len(data['indoor_keys']) > 0:
+            LOGGER.info('Found indoor keys!')
+            self.obs_data(data, '_indoor')
+        else:
+            LOGGER.info('No observation data available for station.')
 
         c.close()
+
+    def mySetDriver(self, node, driver, key, data):
+        if key in data['obs'][0]:
+            self.nodes[node].setDriver(driver, data['obs'][0][key])
+
+    def obs_data(self, data, suffix):
+
+        if len(data['obs']) == 0:
+            LOGGER.info('missing observation data')
+            return
+
+        # Right now we expect both air and sky data in the obs. What if we
+        # only get one of them?
+        # do I need to create a function to set a driver and pass
+        # def mySetDriver(node, driver, key, data):
+        #    if key in data['obs'][0]:
+        #        self.nodes[node].setDriver(driver, data['obs'][0][key])
+        self.mySetDriver('temperature', 'ST', 'air_temperature' + suffix, data)
+        self.mySetDriver('pressure', 'ST', 'barometric_pressure' + suffix, data)
+        self.mySetDriver('pressure', 'GV0', 'sea_level_pressure' + suffix, data)
+        self.mySetDriver('humidity', 'ST', 'relative_humidity' + suffix, data)
+        self.mySetDriver('rain', 'ST', 'precip' + suffix, data)
+        self.mySetDriver('rain', 'GV0', 'precip_accum_last_1hr' + suffix, data)
+        self.mySetDriver('rain', 'GV1', 'precip_accum_local_day' + suffix, data)
+        self.mySetDriver('rain', 'GV2', 'precip_accum_local_yesterday' + suffix, data)
+        self.mySetDriver('wind', 'ST', 'wind_avg' + suffix, data)
+        self.mySetDriver('wind', 'GV0', 'wind_direction' + suffix, data)
+        self.mySetDriver('wind', 'GV1', 'wind_gust' + suffix, data)
+        self.mySetDriver('wind', 'GV2', 'wind_lull' + suffix, data)
+        self.mySetDriver('light', 'ST', 'uv' + suffix, data)
+        self.mySetDriver('light', 'GV0', 'solar_radiation' + suffix, data)
+        self.mySetDriver('light', 'GV1', 'brightness' + suffix, data)
+        self.mySetDriver('lightning', 'ST', 'lightning_strike_last_3hr' + suffix, data)
+        self.mySetDriver('lightning', 'GV0', 'lightning_strike_last_distance' + suffix, data)
+        self.mySetDriver('temperature', 'GV0', 'feels_like' + suffix, data)
+        self.mySetDriver('temperature', 'GV1', 'dew_point' + suffix, data)
+        self.mySetDriver('temperature', 'GV2', 'heat_index' + suffix, data)
+        self.mySetDriver('temperature', 'GV3', 'wind_chill' + suffix, data)
+        self.mySetDriver('temperature', 'GV4', 'wet_bulb_temperature' + suffix, data)
+        self.mySetDriver('temperature', 'GV5', 'delta_t' + suffix, data)
+        self.mySetDriver('temperature', 'GV6', 'air_density' + suffix, data)
+
+        #self.nodes['temperature'].setDriver('ST', data['obs'][0]['air_temperature'+suffix])
+        #self.nodes['pressure'].setDriver('ST', data['obs'][0]['barometric_pressure'+suffix])
+        #self.nodes['pressure'].setDriver('GV0', data['obs'][0]['sea_level_pressure'+suffix])
+        #self.nodes['humidity'].setDriver('ST', data['obs'][0]['relative_humidity'+suffix])
+        #self.nodes['rain'].setDriver('ST', data['obs'][0]['precip'+suffix])
+        #self.nodes['rain'].setDriver('GV0', data['obs'][0]['precip_accum_last_1hr'+suffix])
+        #self.nodes['rain'].setDriver('GV1', data['obs'][0]['precip_accum_local_day'+suffix])
+        #self.nodes['rain'].setDriver('GV2', data['obs'][0]['precip_accum_local_yesterday'+suffix])
+        #self.nodes['wind'].setDriver('ST', data['obs'][0]['wind_avg'+suffix])
+        #self.nodes['wind'].setDriver('GV0', data['obs'][0]['wind_direction'+suffix])
+        #self.nodes['wind'].setDriver('GV1', data['obs'][0]['wind_gust'+suffix])
+        #self.nodes['wind'].setDriver('GV2', data['obs'][0]['wind_lull'+suffix])
+        #self.nodes['light'].setDriver('ST', data['obs'][0]['uv'+suffix])
+        #self.nodes['light'].setDriver('GV0', data['obs'][0]['solar_radiation'+suffix])
+        #self.nodes['light'].setDriver('GV1', data['obs'][0]['brightness'+suffix])
+        #self.nodes['lightning'].setDriver('ST', data['obs'][0]['lightning_strike_count_last_3hr'+suffix])
+        #self.nodes['lightning'].setDriver('GV0', data['obs'][0]['lightning_strike_last_distance'+suffix])
+        #self.nodes['temperature'].setDriver('GV0', data['obs'][0]['feels_like'+suffix])
+        #self.nodes['temperature'].setDriver('GV1', data['obs'][0]['dew_point'+suffix])
+        #self.nodes['temperature'].setDriver('GV2', data['obs'][0]['heat_index'+suffix])
+        #self.nodes['temperature'].setDriver('GV3', data['obs'][0]['wind_chill'+suffix])
+        #self.nodes['temperature'].setDriver('GV4', data['obs'][0]['wet_bulb_temperature'+suffix])
+        #self.nodes['temperature'].setDriver('GV5', data['obs'][0]['delta_t'+suffix])
+        #self.nodes['temperature'].setDriver('GV6', data['obs'][0]['air_density'+suffix])
+
 
     def SetUnits(self, u):
         self.units = u
