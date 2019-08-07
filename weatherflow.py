@@ -120,10 +120,20 @@ class Controller(polyinterface.Controller):
             # obs is array of dictionaries. Array index 0 is what we want
             # to get current daily and yesterday daily rainfall values
 
-            LOGGER.info('daily rainfall = %f' %
-                    awdata['obs'][0]['precip_accum_local_day'])
-            LOGGER.info('yesterday rainfall = %f' %
-                    awdata['obs'][0]['precip_accum_local_yesterday'])
+            if 'obs' in awdata:
+                if 'precip_accum_local_day' in awdata['obs'][0]:
+                    LOGGER.info('daily rainfall = %f' %
+                        awdata['obs'][0]['precip_accum_local_day'])
+                else:
+                    LOGGER.info('Missing local day rainfall acummulation.')
+                if 'precip_accum_local_yesterday' in awdata['obs'][0]:
+                    LOGGER.info('yesterday rainfall = %f' %
+                        awdata['obs'][0]['precip_accum_local_yesterday'])
+                else:
+                    LOGGER.info('Missing local yesterday rainfall acummulation.')
+            else:
+                LOGGER.info('station info query has no observation data.')
+
             c.close()
 
         except Exception as e:
