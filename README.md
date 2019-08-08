@@ -49,6 +49,10 @@ The WeatherFlow nodeserver keeps track of the version number and when a profile 
 
 # Release Notes
 
+- 1.0.1 08/07/2019
+   - Fix units for wind gust and lull
+   - Handle missing station and add notice
+   - Fix timestamp to really report time since last query
 - 1.0.0 08/07/2019
    - Rewrite UOM handling and clean up profile files
    - Handle missing observation data properly
