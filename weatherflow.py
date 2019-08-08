@@ -49,21 +49,27 @@ class Controller(polyinterface.Controller):
         self.station = ''
         self.agl = 0.0
         self.elevation = 0.0
+        self.configured = False
         self.http = None 
 
     def process_config(self, config):
-        # This isn't really what the name implies, it is getting called
-        # for all non-driver database updates.  It also appears to be called
-        # after the database update has occured.  Thus it is pretty much
-        # useless for parameter checking.
+        LOGGER.info('in process_config')
+        if 'customParams' in config and config['customParams'] != self.myConfig:
+            changed = False
+            if 'Station' in config['customParams']:
+                if self.station != config['customParams']['Station']:
+                    self.station = config['customParams']['Station']
+                    self.configured = True
+                    self.removeNoticesAll()
+                    LOGGER.info('station exist and is changed')
 
-        # can we just ignore non-parameter changes?
-        if self.myConfig == config['customParams']:
-            return
+            self.myConfig = config['customParams']
+            
 
-        # looks like a parameter changed, so which one?
-        new_params = config['customParams']
-        self.myConfig = config['customParams']
+        if self.Station == '':
+            LOGGER.info('no station defined, add notice')
+            self.addNotice({'Missing': 'Station paramenter must be set'})
+            self.configured = False
 
     def query_wf(self):
         """
@@ -145,6 +151,7 @@ class Controller(polyinterface.Controller):
         self.http = urllib3.HTTPConnectionPool('swd.weatherflow.com', maxsize=1)
         self.check_params()
         self.discover()
+        self.hub_timestamp = int(time.time())
 
         #for node in self.nodes:
         #       LOGGER.info (self.nodes[node].name + ' is at index ' + node)
@@ -296,6 +303,10 @@ class Controller(polyinterface.Controller):
         self.removeNoticesAll()
 
         # Add a notice?
+        if self.station == '':
+            self.addNotice({'Missing': 'Station paramenter must be set'})
+        else:
+            self.configured = True
 
     def remove_notices_all(self,command):
         LOGGER.info('remove_notices_all:')
@@ -308,6 +319,9 @@ class Controller(polyinterface.Controller):
         return st
 
     def query_data(self):
+        if not self.configured:
+            return
+
         LOGGER.info('Query WeatherFlow server for observation data')
         path_str = '/swd/rest/observations/station/'
         path_str += self.station
@@ -351,6 +365,8 @@ class Controller(polyinterface.Controller):
         if len(data['obs']) == 0:
             LOGGER.info('missing observation data')
             return
+
+        self.hub_timestamp = int(time.time())
 
         # Right now we expect both air and sky data in the obs. What if we
         # only get one of them?
