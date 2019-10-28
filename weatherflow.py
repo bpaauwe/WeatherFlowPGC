@@ -44,15 +44,19 @@ class Controller(polyinterface.Controller):
                 }
         self.hb = 0
         self.hub_timestamp = 0
-        self.poly.onConfig(self.process_config)
-        self.poly.onStop(self.my_stop)
         self.station = ''
         self.agl = 0.0
         self.elevation = 0.0
         self.configured = False
+        self.started = False
         self.http = None 
+        self.poly.onConfig(self.process_config)
+        self.poly.onStop(self.my_stop)
 
     def process_config(self, config):
+        if self.started == False:
+            return
+
         LOGGER.info('in process_config')
         if 'customParams' in config and config['customParams'] != self.myConfig:
             changed = False
@@ -152,6 +156,7 @@ class Controller(polyinterface.Controller):
         self.check_params()
         self.discover()
         self.hub_timestamp = int(time.time())
+        self.started = True
 
         #for node in self.nodes:
         #       LOGGER.info (self.nodes[node].name + ' is at index ' + node)
