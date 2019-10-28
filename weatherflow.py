@@ -28,7 +28,9 @@ class Controller(polyinterface.Controller):
         self.primary = self.address
         self.stopping = False
         self.stopped = True
-        self.myConfig = {}
+        self.myConfig = {
+                'Station': '<Station ID>'
+                }
         self.rain_data = {
                 'hourly': 0,
                 'hour' : 0,
@@ -45,6 +47,7 @@ class Controller(polyinterface.Controller):
         self.hb = 0
         self.hub_timestamp = 0
         self.station = ''
+        self.default = "<station ID>"
         self.agl = 0.0
         self.elevation = 0.0
         self.configured = False
@@ -58,22 +61,24 @@ class Controller(polyinterface.Controller):
             return
 
         LOGGER.info('in process_config')
-        if 'customParams' in config and config['customParams'] != self.myConfig:
-            changed = False
+        changed = False
+        if 'customParams' in config:
             if 'Station' in config['customParams']:
-                if self.station != config['customParams']['Station']:
+                if self.myConfig['Station'] != config['customParams']['Station']:
+                    self.myConfig['Station'] = config['customParams']['Station']
                     self.station = config['customParams']['Station']
-                    self.configured = True
-                    self.removeNoticesAll()
+                    changed = True
                     LOGGER.info('station exist and is changed')
 
-            self.myConfig = config['customParams']
-            
+            if changed:
+                self.removeNoticesAll()
+                notices = {}
+                self.configured = True
 
-        if self.Station == '':
-            LOGGER.info('no station defined, add notice')
-            self.addNotice({'Missing': 'Station paramenter must be set'})
-            self.configured = False
+                if self.station == self.default:
+                    notices['Station'] = 'Station parameter must be set'
+                    self.configured = False
+                self.AddNotice(notices)
 
     def query_wf(self):
         """
@@ -292,26 +297,30 @@ class Controller(polyinterface.Controller):
         return units
 
     def check_params(self):
+        self.removeNoticesAll()
         default_units = "metric"
-
         self.units = self.check_units()
+        notices = {}
+        st = True
 
         if 'Station' in self.polyConfig['customParams']:
-            self.station = self.polyConfig['customParams']['Station']
-
-        self.myConfig = self.polyConfig['customParams']
+            if self.polyConfig['customParams']['Station'] != self.default:
+                self.station = self.polyConfig['customParams']['Station']
+                myConfig['Station'] = self.station
+            else:
+                st = False
+                notices['Station'] = 'Station parameter must be set'
+        else:
+            st = False
+            notices['Station'] = 'Station parameter must be set'
+        
 
         # Make sure they are in the params
-        self.addCustomParam({'Station': self.station})
+        self.addCustomParam(myConfig)
+        self.addNotice(notices)
+        
+        return st
 
-        # Remove all existing notices
-        self.removeNoticesAll()
-
-        # Add a notice?
-        if self.station == '':
-            self.addNotice({'Missing': 'Station paramenter must be set'})
-        else:
-            self.configured = True
 
     def remove_notices_all(self,command):
         LOGGER.info('remove_notices_all:')
