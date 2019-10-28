@@ -306,7 +306,7 @@ class Controller(polyinterface.Controller):
         if 'Station' in self.polyConfig['customParams']:
             if self.polyConfig['customParams']['Station'] != self.default:
                 self.station = self.polyConfig['customParams']['Station']
-                myConfig['Station'] = self.station
+                self.myConfig['Station'] = self.station
             else:
                 st = False
                 notices['Station'] = 'Station parameter must be set'
@@ -316,7 +316,7 @@ class Controller(polyinterface.Controller):
         
 
         # Make sure they are in the params
-        self.addCustomParam(myConfig)
+        self.addCustomParam(self.myConfig)
         self.addNotice(notices)
         
         return st
