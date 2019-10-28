@@ -78,7 +78,7 @@ class Controller(polyinterface.Controller):
                 if self.station == self.default:
                     notices['Station'] = 'Station parameter must be set'
                     self.configured = False
-                self.AddNotice(notices)
+                self.addNotice(notices)
 
     def query_wf(self):
         """
