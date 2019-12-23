@@ -334,6 +334,7 @@ class Controller(polyinterface.Controller):
 
     def query_data(self):
         if not self.configured:
+            LOGGER.debug('Skip query, no station configured.')
             return
 
         LOGGER.info('Query WeatherFlow server for observation data')
