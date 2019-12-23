@@ -49,6 +49,8 @@ The WeatherFlow nodeserver keeps track of the version number and when a profile 
 
 # Release Notes
 
+- 1.0.3 12/23/2019
+   - On startup, set configured = true if stations is configured.
 - 1.0.2 10/28/2019
    - Improve handling of custom parameters.
 - 1.0.1 08/07/2019
