@@ -158,7 +158,7 @@ class Controller(polyinterface.Controller):
     def start(self):
         LOGGER.info('Starting WeatherFlow Node Server')
         self.http = urllib3.HTTPConnectionPool('swd.weatherflow.com', maxsize=1)
-        self.check_params()
+        self.configured = self.check_params()
         self.discover()
         self.hub_timestamp = int(time.time())
         self.started = True
