@@ -362,6 +362,7 @@ class Controller(polyinterface.Controller):
 
         if 'outdoor_keys' in data and len(data['outdoor_keys']) > 0:
             LOGGER.info('Found outdoor keys!')
+            LOGGER.debug(data)
             self.obs_data(data, '')
         elif 'indoor_keys' in data and len(data['indoor_keys']) > 0:
             LOGGER.info('Found indoor keys!')
@@ -374,6 +375,8 @@ class Controller(polyinterface.Controller):
     def mySetDriver(self, node, driver, key, data):
         if key in data['obs'][0]:
             self.nodes[node].setDriver(driver, data['obs'][0][key])
+        else:
+            LOGGER.info('key, ' + key + ' is missing from data')
 
     def obs_data(self, data, suffix):
 
