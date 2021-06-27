@@ -362,7 +362,6 @@ class Controller(polyinterface.Controller):
 
         if 'outdoor_keys' in data and len(data['outdoor_keys']) > 0:
             LOGGER.info('Found outdoor keys!')
-            LOGGER.debug(data)
             self.obs_data(data, '')
         elif 'indoor_keys' in data and len(data['indoor_keys']) > 0:
             LOGGER.info('Found indoor keys!')
@@ -681,6 +680,9 @@ class WindNode(polyinterface.Node):
 
     def setDriver(self, driver, value):
         if (driver == 'ST' or driver == 'GV1' or driver == 'GV3'):
+            # value is in m/s, first convert to kph
+            value = round(value * (18 / 5), 3);
+
             if (self.units != 'metric'):
                 value = round(value / 1.609344, 2)
         super(WindNode, self).setDriver(driver, value, report=True, force=False, uom=self.uoms[driver])
